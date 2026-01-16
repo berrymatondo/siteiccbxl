@@ -1,22 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { ChevronDown, ChevronUp, Edit } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp, Edit } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export function LeadershipTeam() {
-  const [expandedYvan, setExpandedYvan] = useState(false)
-  const [expandedChristian, setExpandedChristian] = useState(false)
+  const [expandedYvan, setExpandedYvan] = useState(false);
+  const [expandedChristian, setExpandedChristian] = useState(false);
 
-  const [isEditOpen, setIsEditOpen] = useState(false)
-  const [yvanImage, setYvanImage] = useState("/images/image.png")
-  const [christianImage, setChristianImage] = useState("/images/image.png")
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [yvanImage, setYvanImage] = useState("/images/image.png");
+  const [christianImage, setChristianImage] = useState("/images/image.png");
 
-  const [tempYvanImage, setTempYvanImage] = useState<string | null>(null)
-  const [tempChristianImage, setTempChristianImage] = useState<string | null>(null)
+  const [tempYvanImage, setTempYvanImage] = useState<string | null>(null);
+  const [tempChristianImage, setTempChristianImage] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const loadImages = async () => {
@@ -24,52 +31,56 @@ export function LeadershipTeam() {
         const [yvanRes, christianRes] = await Promise.all([
           fetch("/api/media?key=pastor_yvan"),
           fetch("/api/media?key=pastor_christian"),
-        ])
+        ]);
 
         if (yvanRes.ok) {
-          const data = await yvanRes.json()
-          setYvanImage(data.imageData)
+          const data = await yvanRes.json();
+          setYvanImage(data.imageData);
         }
 
         if (christianRes.ok) {
-          const data = await christianRes.json()
-          setChristianImage(data.imageData)
+          const data = await christianRes.json();
+          setChristianImage(data.imageData);
         }
       } catch (error) {
-        console.error("[v0] Erreur lors du chargement des images:", error)
+        console.error("[v0] Erreur lors du chargement des images:", error);
       }
-    }
+    };
 
-    loadImages()
-  }, [])
+    loadImages();
+  }, []);
 
   const handleYvanImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const result = reader.result as string
-        setTempYvanImage(result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+    console.log("Change image Ivan");
 
-  const handleChristianImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string
-        setTempChristianImage(result)
-      }
-      reader.readAsDataURL(file)
+        const result = reader.result as string;
+        setTempYvanImage(result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
+
+  const handleChristianImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setTempChristianImage(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSave = async () => {
     try {
-      const promises = []
+      const promises = [];
 
       if (tempYvanImage) {
         promises.push(
@@ -80,12 +91,12 @@ export function LeadershipTeam() {
               key: "pastor_yvan",
               imageData: tempYvanImage,
             }),
-          }),
-        )
-        setYvanImage(tempYvanImage)
+          })
+        );
+        setYvanImage(tempYvanImage);
       }
 
-      if (tempChristianImage) {
+      /*       if (tempChristianImage) {
         promises.push(
           fetch("/api/media", {
             method: "POST",
@@ -94,28 +105,61 @@ export function LeadershipTeam() {
               key: "pastor_christian",
               imageData: tempChristianImage,
             }),
+          })
+        );
+        setChristianImage(tempChristianImage);
+      } */
+
+      await Promise.all(promises);
+
+      setTempYvanImage(null);
+      //setTempChristianImage(null);
+      setIsEditOpen(false);
+      alert("Images sauvegardées avec succès!");
+    } catch (error) {
+      console.error("[v0] Erreur lors de la sauvegarde:", error);
+      alert("Erreur lors de la sauvegarde des images");
+    }
+  };
+
+  const handleSave1 = async () => {
+    // console.log("SAB");
+
+    try {
+      // const promises = [];
+
+      if (tempChristianImage) {
+        //promises.push(
+        await fetch("/api/media", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            key: "pastor_christian",
+            imageData: tempChristianImage,
           }),
-        )
-        setChristianImage(tempChristianImage)
+        });
+        //  );
+        setChristianImage(tempChristianImage);
+        setIsEditOpen(false);
       }
 
-      await Promise.all(promises)
+      //await Promise.all(promises);
 
-      setTempYvanImage(null)
-      setTempChristianImage(null)
-      setIsEditOpen(false)
-      alert("Images sauvegardées avec succès!")
+      //setTempYvanImage(null);
+      setTempChristianImage(null);
+      setIsEditOpen(false);
+      alert("Images sauvegardées avec succès!");
     } catch (error) {
-      console.error("[v0] Erreur lors de la sauvegarde:", error)
-      alert("Erreur lors de la sauvegarde des images")
+      console.error("[v0] Erreur lors de la sauvegarde:", error);
+      alert("Erreur lors de la sauvegarde des images");
     }
-  }
+  };
 
   const handleCancel = () => {
-    setTempYvanImage(null)
-    setTempChristianImage(null)
-    setIsEditOpen(false)
-  }
+    setTempYvanImage(null);
+    setTempChristianImage(null);
+    setIsEditOpen(false);
+  };
 
   return (
     <section className="px-4 mb-8 mt-8 relative">
@@ -140,24 +184,31 @@ export function LeadershipTeam() {
       {/* Pasteur Yvan & Mode Castanou */}
       <div className="mb-12 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">
         <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-          <div className="w-full md:w-1/3 flex-shrink-0">
+          <div className="w-full md:w-1/4 flex-shrink-0">
             <img
               src={yvanImage || "/placeholder.svg"}
               alt="Pasteur Yvan & Mode Castanou"
               className="w-full rounded-xl object-cover"
             />
-            <h3 className="text-xl font-bold text-[#141117] dark:text-white text-center mt-4">Pasteur Yvan & Mode</h3>
-            <p className="text-lg font-semibold text-[#7f20df] text-center">CASTANOU</p>
+            <h3 className="text-xl font-bold text-[#141117] dark:text-white text-center mt-4">
+              Pasteur Yvan & Mode
+            </h3>
+            <p className="text-lg font-semibold text-[#7f20df] text-center">
+              CASTANOU
+            </p>
           </div>
           <div className="w-full md:w-2/3 space-y-4 text-[#141117] dark:text-gray-300">
             {!expandedYvan ? (
               <>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Yvan Castanou est le Père fondateur des églises « Impact Centre Chrétien » implantées dans le monde, à
-                  travers lesquelles le Saint-Esprit transforme une multitude d'hommes et de femmes en de véritables
-                  adorateurs (disciples). Après avoir effectué un premier cursus biblique en Angleterre, il en a suivi
-                  une autre à l'Institut Biblique de Paris et à l'Académie des Hautes Etudes Théologiques et Pastorales
-                  de Paris.
+                  Yvan Castanou est le Père fondateur des églises « Impact
+                  Centre Chrétien » implantées dans le monde, à travers
+                  lesquelles le Saint-Esprit transforme une multitude d'hommes
+                  et de femmes en de véritables adorateurs (disciples). Après
+                  avoir effectué un premier cursus biblique en Angleterre, il en
+                  a suivi une autre à l'Institut Biblique de Paris et à
+                  l'Académie des Hautes Etudes Théologiques et Pastorales de
+                  Paris.
                 </p>
                 <button
                   onClick={() => setExpandedYvan(true)}
@@ -169,23 +220,30 @@ export function LeadershipTeam() {
             ) : (
               <>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Yvan Castanou est le Père fondateur des églises « Impact Centre Chrétien » implantées dans le monde, à
-                  travers lesquelles le Saint-Esprit transforme une multitude d'hommes et de femmes en de véritables
-                  adorateurs (disciples). Après avoir effectué un premier cursus biblique en Angleterre, il en a suivi
-                  une autre à l'Institut Biblique de Paris et à l'Académie des Hautes Etudes Théologiques et Pastorales
-                  de Paris.
+                  Yvan Castanou est le Père fondateur des églises « Impact
+                  Centre Chrétien » implantées dans le monde, à travers
+                  lesquelles le Saint-Esprit transforme une multitude d'hommes
+                  et de femmes en de véritables adorateurs (disciples). Après
+                  avoir effectué un premier cursus biblique en Angleterre, il en
+                  a suivi une autre à l'Institut Biblique de Paris et à
+                  l'Académie des Hautes Etudes Théologiques et Pastorales de
+                  Paris.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  En mars 2004, lui et son épouse Modestine, ont été ordonnés pasteurs par les pasteurs André Thobois de
-                  la Fédération Protestante de France, et Emmanuel Toussaint du Concile Mondial Protestant et
-                  Evangélique des Eglises.
+                  En mars 2004, lui et son épouse Modestine, ont été ordonnés
+                  pasteurs par les pasteurs André Thobois de la Fédération
+                  Protestante de France, et Emmanuel Toussaint du Concile
+                  Mondial Protestant et Evangélique des Eglises.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Modestine Castanou, quant à elle, est responsable du Ministère des Ressources Humaines et du Ministère
-                  des Femmes d'Impact à Impact Centre Chrétien. Le pasteur Mode, comme on l'appelle communément, est une
-                  femme de conviction, déterminée et remplie d'assurance. Elle est consacrée au Seigneur et profondément
-                  impliquée dans son œuvre. Engagée pour la cause de la femme, elle est préoccupée par son
-                  épanouissement et son déploiement dans la cellule familiale comme dans la société.
+                  Modestine Castanou, quant à elle, est responsable du Ministère
+                  des Ressources Humaines et du Ministère des Femmes d'Impact à
+                  Impact Centre Chrétien. Le pasteur Mode, comme on l'appelle
+                  communément, est une femme de conviction, déterminée et
+                  remplie d'assurance. Elle est consacrée au Seigneur et
+                  profondément impliquée dans son œuvre. Engagée pour la cause
+                  de la femme, elle est préoccupée par son épanouissement et son
+                  déploiement dans la cellule familiale comme dans la société.
                 </p>
                 <button
                   onClick={() => setExpandedYvan(false)}
@@ -202,7 +260,7 @@ export function LeadershipTeam() {
       {/* Pasteur Christian & Evelyne Saboukoulou */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">
         <div className="flex flex-col md:flex-row-reverse gap-6 items-center md:items-start">
-          <div className="w-full md:w-1/3 flex-shrink-0">
+          <div className="w-full md:w-1/4 flex-shrink-0">
             <img
               src={christianImage || "/placeholder.svg"}
               alt="Pasteur Christian & Evelyne Saboukoulou"
@@ -211,18 +269,23 @@ export function LeadershipTeam() {
             <h3 className="text-xl font-bold text-[#141117] dark:text-white text-center mt-4">
               Pasteur Christian & Evelyne
             </h3>
-            <p className="text-lg font-semibold text-[#7f20df] text-center">SABOUKOULOU</p>
+            <p className="text-lg font-semibold text-[#7f20df] text-center">
+              SABOUKOULOU
+            </p>
           </div>
           <div className="w-full md:w-2/3 space-y-4 text-[#141117] dark:text-gray-300">
             {!expandedChristian ? (
               <>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Le BENELUX (Belgique, Nederlands (Pays-Bas), Luxembourg) pour Christ, voici l'une des églises en
-                  charge des pasteurs Christian et Evelyne Saboukoulou. Tous deux ont œuvré dès les premières heures
-                  d'ICC à Paris et sont en œuvre pour le Seigneur en Belgique, principalement à Bruxelles. Dans la
-                  simplicité, la détermination et la consécration totale à Jésus-Christ, ils ont à cœur de faire
-                  connaître le message de la bonne nouvelle du Royaume de Dieu et former une armée de Gagneurs d'âmes, à
-                  Bruxelles et dans tout le BENELUX.
+                  Le BENELUX (Belgique, Nederlands (Pays-Bas), Luxembourg) pour
+                  Christ, voici l'une des églises en charge des pasteurs
+                  Christian et Evelyne Saboukoulou. Tous deux ont œuvré dès les
+                  premières heures d'ICC à Paris et sont en œuvre pour le
+                  Seigneur en Belgique, principalement à Bruxelles. Dans la
+                  simplicité, la détermination et la consécration totale à
+                  Jésus-Christ, ils ont à cœur de faire connaître le message de
+                  la bonne nouvelle du Royaume de Dieu et former une armée de
+                  Gagneurs d'âmes, à Bruxelles et dans tout le BENELUX.
                 </p>
                 <button
                   onClick={() => setExpandedChristian(true)}
@@ -234,22 +297,29 @@ export function LeadershipTeam() {
             ) : (
               <>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Le BENELUX (Belgique, Nederlands (Pays-Bas), Luxembourg) pour Christ, voici l'une des églises en
-                  charge des pasteurs Christian et Evelyne Saboukoulou.
+                  Le BENELUX (Belgique, Nederlands (Pays-Bas), Luxembourg) pour
+                  Christ, voici l'une des églises en charge des pasteurs
+                  Christian et Evelyne Saboukoulou.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Tous deux ont œuvré dès les premières heures d'ICC à Paris et sont en œuvre pour le Seigneur en
-                  Belgique, principalement à Bruxelles. Dans la simplicité, la détermination et la consécration totale à
-                  Jésus-Christ, ils ont à cœur de faire connaître le message de la bonne nouvelle du Royaume de Dieu et
-                  former une armée de Gagneurs d'âmes, à Bruxelles et dans tout le BENELUX.
+                  Tous deux ont œuvré dès les premières heures d'ICC à Paris et
+                  sont en œuvre pour le Seigneur en Belgique, principalement à
+                  Bruxelles. Dans la simplicité, la détermination et la
+                  consécration totale à Jésus-Christ, ils ont à cœur de faire
+                  connaître le message de la bonne nouvelle du Royaume de Dieu
+                  et former une armée de Gagneurs d'âmes, à Bruxelles et dans
+                  tout le BENELUX.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Passionné de la parole de Dieu, zélé pour gagner et prendre soin des âmes, Christian Saboukoulou a
-                  suivi sa formation pastorale auprès du Pasteur Yvan Castanou à Paris.
+                  Passionné de la parole de Dieu, zélé pour gagner et prendre
+                  soin des âmes, Christian Saboukoulou a suivi sa formation
+                  pastorale auprès du Pasteur Yvan Castanou à Paris.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
-                  Minutieux et conscient de l'importance du respect des autorités établis, pasteur Christian a toujours
-                  fait preuve d'obéissance et fidélité dans son service dans les petites, comme dans les grandes choses.
+                  Minutieux et conscient de l'importance du respect des
+                  autorités établis, pasteur Christian a toujours fait preuve
+                  d'obéissance et fidélité dans son service dans les petites,
+                  comme dans les grandes choses.
                 </p>
                 <p className="text-sm md:text-base leading-relaxed text-justify">
                   Avec son épouse, il a été ordonné par ce dernier en 2011.
@@ -274,7 +344,9 @@ export function LeadershipTeam() {
           <div className="space-y-6 py-4">
             {/* Pasteur Yvan & Mode */}
             <div className="space-y-3">
-              <h3 className="font-semibold text-base text-gray-900 dark:text-white">Pasteur Yvan & Mode Castanou</h3>
+              <h3 className="font-semibold text-base text-gray-900 dark:text-white">
+                Pasteur Yvan & Mode Castanou
+              </h3>
               <div className="flex flex-col gap-3">
                 <input
                   type="file"
@@ -292,6 +364,22 @@ export function LeadershipTeam() {
               </div>
             </div>
 
+            <div className="flex gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <Button
+                onClick={handleSave}
+                className="flex-1 bg-[#7f20df] hover:bg-[#6a1bc0] text-white font-semibold py-3"
+              >
+                Enregistrer les modifications
+              </Button>
+              <Button
+                onClick={handleCancel}
+                variant="outline"
+                className="flex-1 bg-transparent border-2 py-3"
+              >
+                Annuler
+              </Button>
+            </div>
+
             {/* Pasteur Christian & Evelyne */}
             <div className="space-y-3">
               <h3 className="font-semibold text-base text-gray-900 dark:text-white">
@@ -306,7 +394,9 @@ export function LeadershipTeam() {
                 />
                 <div className="w-full max-w-sm mx-auto">
                   <img
-                    src={tempChristianImage || christianImage || "/placeholder.svg"}
+                    src={
+                      tempChristianImage || christianImage || "/placeholder.svg"
+                    }
                     alt="Aperçu Christian & Evelyne"
                     className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700"
                   />
@@ -316,12 +406,16 @@ export function LeadershipTeam() {
 
             <div className="flex gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
               <Button
-                onClick={handleSave}
+                onClick={handleSave1}
                 className="flex-1 bg-[#7f20df] hover:bg-[#6a1bc0] text-white font-semibold py-3"
               >
                 Enregistrer les modifications
               </Button>
-              <Button onClick={handleCancel} variant="outline" className="flex-1 bg-transparent border-2 py-3">
+              <Button
+                onClick={handleCancel}
+                variant="outline"
+                className="flex-1 bg-transparent border-2 py-3"
+              >
                 Annuler
               </Button>
             </div>
@@ -329,5 +423,5 @@ export function LeadershipTeam() {
         </DialogContent>
       </Dialog>
     </section>
-  )
+  );
 }
