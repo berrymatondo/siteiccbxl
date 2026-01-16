@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Play, Edit2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect } from "react";
+import { Play, Edit2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface VideoInfo {
-  url: string
-  videoId: string
-  title: string
-  thumbnail: string
-  speaker: string
+  url: string;
+  videoId: string;
+  title: string;
+  thumbnail: string;
+  speaker: string;
 }
 
 export function YoutubeHeroCard() {
@@ -22,79 +28,88 @@ export function YoutubeHeroCard() {
     title: "Pourquoi et comment inviter des âmes à l'église",
     thumbnail: "https://img.youtube.com/vi/uZ-7sJb48cc/maxresdefault.jpg",
     speaker: "Pst. Christian Saboukoulou",
-  })
-  const [isEditOpen, setIsEditOpen] = useState(false)
-  const [editUrl, setEditUrl] = useState("")
-  const [editSpeaker, setEditSpeaker] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  });
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editUrl, setEditUrl] = useState("");
+  const [editSpeaker, setEditSpeaker] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadVideo = async () => {
       try {
-        const response = await fetch("/api/video-embeds?key=hero_video")
+        const response = await fetch("/api/video-embeds?key=hero_video");
         if (response.ok) {
-          const data = await response.json()
+          const data = await response.json();
           setVideoInfo({
             url: data.url,
             videoId: extractVideoId(data.url) || "",
             title: data.title || "Vidéo YouTube",
-            thumbnail: data.thumbnail || `https://img.youtube.com/vi/${extractVideoId(data.url)}/maxresdefault.jpg`,
+            thumbnail:
+              data.thumbnail ||
+              `https://img.youtube.com/vi/${extractVideoId(
+                data.url
+              )}/maxresdefault.jpg`,
             speaker: data.speaker || "Pasteur",
-          })
+          });
         }
       } catch (error) {
-        console.error("[v0] Erreur lors du chargement:", error)
+        console.error("[v0] Erreur lors du chargement:", error);
       }
-    }
+    };
 
-    loadVideo()
-  }, [])
+    loadVideo();
+  }, []);
 
   const extractVideoId = (url: string): string | null => {
-    const patterns = [/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/, /youtube\.com\/embed\/([^&\n?#]+)/]
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+      /youtube\.com\/embed\/([^&\n?#]+)/,
+    ];
 
     for (const pattern of patterns) {
-      const match = url.match(pattern)
-      if (match) return match[1]
+      const match = url.match(pattern);
+      if (match) return match[1];
     }
-    return null
-  }
+    return null;
+  };
 
   const fetchVideoInfo = async (videoId: string) => {
     try {
       const response = await fetch(
-        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
-      )
-      if (!response.ok) throw new Error("Failed to fetch video info")
-      const data = await response.json()
+        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
+      );
+      if (!response.ok) throw new Error("Failed to fetch video info");
+      const data = await response.json();
       return {
         title: data.title,
-        thumbnail: data.thumbnail_url || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-      }
+        thumbnail:
+          data.thumbnail_url ||
+          `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      };
     } catch (error) {
-      console.error("Error fetching video info:", error)
+      console.error("Error fetching video info:", error);
       return {
         title: "Vidéo YouTube",
         thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-      }
+      };
     }
-  }
+  };
 
   const handleEdit = () => {
-    setEditUrl(videoInfo.url)
-    setEditSpeaker(videoInfo.speaker)
-    setIsEditOpen(true)
-  }
+    setEditUrl(videoInfo.url);
+    setEditSpeaker(videoInfo.speaker);
+    setIsEditOpen(true);
+  };
 
   const handleSave = async () => {
-    const videoId = extractVideoId(editUrl)
+    const videoId = extractVideoId(editUrl);
     if (!videoId) {
-      alert("URL YouTube invalide")
-      return
+      alert("URL YouTube invalide");
+      return;
     }
 
-    setIsLoading(true)
-    const info = await fetchVideoInfo(videoId)
+    setIsLoading(true);
+    const info = await fetchVideoInfo(videoId);
 
     const newVideoInfo = {
       url: editUrl,
@@ -102,7 +117,7 @@ export function YoutubeHeroCard() {
       title: info.title,
       thumbnail: info.thumbnail,
       speaker: editSpeaker,
-    }
+    };
 
     try {
       await fetch("/api/video-embeds", {
@@ -115,24 +130,37 @@ export function YoutubeHeroCard() {
           speaker: editSpeaker,
           thumbnail: info.thumbnail,
         }),
-      })
+      });
 
-      setVideoInfo(newVideoInfo)
-      setIsEditOpen(false)
+      setVideoInfo(newVideoInfo);
+      setIsEditOpen(false);
     } catch (error) {
-      console.error("[v0] Erreur lors de la sauvegarde:", error)
-      alert("Erreur lors de la sauvegarde")
+      console.error("[v0] Erreur lors de la sauvegarde:", error);
+      alert("Erreur lors de la sauvegarde");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <>
-      <div className="px-4 mb-8 max-md:mt-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Dernier Message</h2>
-          <Button variant="ghost" size="sm" onClick={handleEdit} className="h-8 px-2">
+      <div className="px-4 mb-8 max-md:mt-4 ">
+        <div className="flex items-center justify-between mb-3 ">
+          <div className="text-center mb-8 w-full">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#7f20df]"></div>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#141117] dark:text-white uppercase tracking-tight">
+                Dernier Message
+              </h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#7f20df]"></div>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleEdit}
+            className="h-8 px-2 absolute right-0"
+          >
             <Edit2 className="w-4 h-4" />
             Éditer
           </Button>
@@ -157,12 +185,17 @@ export function YoutubeHeroCard() {
 
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="max-md:w-8 w-16 max-md:h-8 h-16 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Play className="max-md:h-6 h-8 max-md:w-6 w-8 text-primary ml-1" fill="currentColor" />
+              <Play
+                className="max-md:h-6 h-8 max-md:w-6 w-8 text-primary ml-1"
+                fill="currentColor"
+              />
             </div>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-6">
-            <h3 className="font-semibold text-white max-md:text-ms text-xl mb-2 leading-tight">{videoInfo.title}</h3>
+            <h3 className="font-semibold text-white max-md:text-ms text-xl mb-2 leading-tight">
+              {videoInfo.title}
+            </h3>
             <p className="text-white/80 text-xs">{videoInfo.speaker}</p>
           </div>
         </a>
@@ -204,5 +237,5 @@ export function YoutubeHeroCard() {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

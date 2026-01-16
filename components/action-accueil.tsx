@@ -1,19 +1,24 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Sparkles, Flame, Sprout, Edit } from "lucide-react"
-import { useState, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Sparkles, Flame, Sprout, Edit } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function AccueilSeries() {
-  const [isEditOpen, setIsEditOpen] = useState(false)
-  const [editImages, setEditImages] = useState<string[]>([])
-  const [editTitles, setEditTitles] = useState<string[]>([])
-  const [editLinks, setEditLinks] = useState<string[]>([])
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editImages, setEditImages] = useState<string[]>([]);
+  const [editTitles, setEditTitles] = useState<string[]>([]);
+  const [editLinks, setEditLinks] = useState<string[]>([]);
 
   const defaultSeries = [
     {
@@ -56,16 +61,16 @@ export function AccueilSeries() {
       backgroundImage: "/images/spiritual-growth.jpg",
       link: "/about",
     },
-  ]
+  ];
 
-  const [series, setSeries] = useState(defaultSeries)
+  const [series, setSeries] = useState(defaultSeries);
 
   useEffect(() => {
     const loadCards = async () => {
       try {
-        const response = await fetch("/api/content-cards")
+        const response = await fetch("/api/content-cards");
         if (response.ok) {
-          const cards = await response.json()
+          const cards = await response.json();
           if (cards && cards.length > 0) {
             setSeries(
               defaultSeries.map((s, i) => ({
@@ -73,37 +78,40 @@ export function AccueilSeries() {
                 backgroundImage: cards[i]?.imageData || s.backgroundImage,
                 title: cards[i]?.title || s.title,
                 link: cards[i]?.url || s.link,
-              })),
-            )
+              }))
+            );
           }
         }
       } catch (error) {
-        console.error("[v0] Erreur lors du chargement des cartes:", error)
+        console.error("[v0] Erreur lors du chargement des cartes:", error);
       }
-    }
+    };
 
-    loadCards()
-  }, [])
+    loadCards();
+  }, []);
 
-  const handleFileChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleFileChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        const newImages = [...editImages]
-        newImages[index] = reader.result as string
-        setEditImages(newImages)
-      }
-      reader.readAsDataURL(file)
+        const newImages = [...editImages];
+        newImages[index] = reader.result as string;
+        setEditImages(newImages);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleEditClick = () => {
-    setEditImages(series.map((s) => s.backgroundImage))
-    setEditTitles(series.map((s) => s.title))
-    setEditLinks(series.map((s) => s.link))
-    setIsEditOpen(true)
-  }
+    setEditImages(series.map((s) => s.backgroundImage));
+    setEditTitles(series.map((s) => s.title));
+    setEditLinks(series.map((s) => s.link));
+    setIsEditOpen(true);
+  };
 
   const handleSave = async () => {
     try {
@@ -117,10 +125,10 @@ export function AccueilSeries() {
             url: editLinks[index],
             imageData: editImages[index],
           }),
-        }),
-      )
+        })
+      );
 
-      await Promise.all(promises)
+      await Promise.all(promises);
 
       setSeries(
         series.map((s, i) => ({
@@ -128,18 +136,18 @@ export function AccueilSeries() {
           backgroundImage: editImages[i],
           title: editTitles[i],
           link: editLinks[i],
-        })),
-      )
-      setIsEditOpen(false)
-      alert("Cartes sauvegardées avec succès!")
+        }))
+      );
+      setIsEditOpen(false);
+      alert("Cartes sauvegardées avec succès!");
     } catch (error) {
-      console.error("[v0] Erreur lors de la sauvegarde:", error)
-      alert("Erreur lors de la sauvegarde des cartes")
+      console.error("[v0] Erreur lors de la sauvegarde:", error);
+      alert("Erreur lors de la sauvegarde des cartes");
     }
-  }
+  };
 
   return (
-    <section className="mt-8 relative">
+    <section className="mt-8 relative ">
       <button
         onClick={handleEditClick}
         className="absolute top-3 right-4 z-20 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
@@ -148,28 +156,42 @@ export function AccueilSeries() {
         <Edit className="h-4 w-4 text-gray-700 dark:text-gray-300" />
       </button>
 
-      <div className="flex items-center justify-between px-4 pb-3 max-w-4xl mx-auto">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Dernier Message</h2>
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#7f20df]"></div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#141117] dark:text-white uppercase tracking-tight">
+            Programmes et activités
+          </h2>
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#7f20df]"></div>
+        </div>
       </div>
       <div className="flex overflow-x-auto no-scrollbar px-4 gap-4 max-w-4xl mx-auto">
         {series.map((item) => {
-          const Icon = item.icon
+          const Icon = item.icon;
           return (
-            <div key={item.id} className="flex flex-col min-w-[160px] w-[160px] gap-2">
+            <div
+              key={item.id}
+              className="flex flex-col min-w-[160px] w-[160px] gap-2"
+            >
               <a
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="aspect-[3/4] rounded-xl flex flex-col items-center justify-end p-4 relative overflow-hidden cursor-pointer hover:scale-105 transition-transform bg-cover bg-center"
+                className="aspect-[3/4] rounded-xl flex flex-col items-start justify-end p-4 relative overflow-hidden cursor-pointer hover:scale-105 transition-transform bg-cover bg-center"
                 style={{ backgroundImage: `url(${item.backgroundImage})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70"></div>
-                <Icon className="h-12 w-12 text-white/50 absolute top-4 left-4 z-10" />
-                <p className="text-white text-sm font-bold relative z-10 leading-tight text-balance">{item.title}</p>
-                <p className="text-white/70 text-[10px] relative z-10 w-full mt-1">{item.episodes}</p>
+                {/*                 <Icon className="h-12 w-12 text-white/50 absolute top-4 left-4 z-10" />
+                 */}{" "}
+                <p className="text-white text-sm font-bold relative z-10 leading-tight text-balance">
+                  {item.title}
+                </p>
+                <p className="text-white/70 text-[10px] relative z-10 w-full mt-1">
+                  {item.episodes}
+                </p>
               </a>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -189,9 +211,9 @@ export function AccueilSeries() {
                     id={`title-${index}`}
                     value={editTitles[index] || ""}
                     onChange={(e) => {
-                      const newTitles = [...editTitles]
-                      newTitles[index] = e.target.value
-                      setEditTitles(newTitles)
+                      const newTitles = [...editTitles];
+                      newTitles[index] = e.target.value;
+                      setEditTitles(newTitles);
                     }}
                     placeholder="Titre de la carte"
                   />
@@ -203,9 +225,9 @@ export function AccueilSeries() {
                     id={`link-${index}`}
                     value={editLinks[index] || ""}
                     onChange={(e) => {
-                      const newLinks = [...editLinks]
-                      newLinks[index] = e.target.value
-                      setEditLinks(newLinks)
+                      const newLinks = [...editLinks];
+                      newLinks[index] = e.target.value;
+                      setEditLinks(newLinks);
                     }}
                     placeholder="/teachings ou https://example.com"
                   />
@@ -240,12 +262,15 @@ export function AccueilSeries() {
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Annuler
             </Button>
-            <Button onClick={handleSave} className="bg-[#7f20df] hover:bg-[#6a1bbd]">
+            <Button
+              onClick={handleSave}
+              className="bg-[#7f20df] hover:bg-[#6a1bbd]"
+            >
               Enregistrer
             </Button>
           </div>
         </DialogContent>
       </Dialog>
     </section>
-  )
+  );
 }
