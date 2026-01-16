@@ -165,7 +165,7 @@ export function AccueilSeries() {
           <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#7f20df]"></div>
         </div>
       </div>
-      <div className="flex overflow-x-auto no-scrollbar px-4 gap-4 max-w-4xl mx-auto">
+      <div className="flex overflow-x-auto no-scrollbar px-2 md:px-4 gap-4 max-w-4xl mx-auto">
         {series.map((item) => {
           const Icon = item.icon;
           return (

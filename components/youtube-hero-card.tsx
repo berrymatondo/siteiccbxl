@@ -144,7 +144,7 @@ export function YoutubeHeroCard() {
 
   return (
     <>
-      <div className="px-4 mb-8 max-md:mt-4 ">
+      <div className="px-2 md:px-4 mb-8 max-md:mt-4 ">
         <div className="flex items-center justify-between mb-3 ">
           <div className="text-center mb-8 w-full">
             <div className="flex items-center justify-center gap-4 mb-6">

@@ -162,7 +162,7 @@ export function LeadershipTeam() {
   };
 
   return (
-    <section className="px-4 mb-8 mt-8 relative">
+    <section className="px-2 md:px-4 mb-8 mt-8 relative">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-6">
           <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#7f20df]"></div>
@@ -182,7 +182,7 @@ export function LeadershipTeam() {
       </button>
 
       {/* Pasteur Yvan & Mode Castanou */}
-      <div className="mb-12 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">
+      <div className="mb-12 bg-white dark:bg-zinc-900 rounded-2xl px-2 md:p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">
         <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
           <div className="w-full md:w-1/4 flex-shrink-0">
             <img
