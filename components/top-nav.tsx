@@ -106,7 +106,7 @@ export function TopNav() {
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ">
             {user ? (
               <>
                 <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export function TopNav() {
                       signOut();
                       setMenuOpen(false);
                     }}
-                    className="flex items-center w-full bg-white text-red-400 font-medium rounded-md px-4 py-2 hover:bg-gray-200"
+                    className=" max-md:hidden flex items-center w-full bg-white text-red-400 font-medium rounded-md px-4 py-2 hover:bg-gray-200"
                   >
                     <LogOut className="h-5 w-5" />
 
@@ -130,7 +130,7 @@ export function TopNav() {
                   handleLoginClick();
                   setMenuOpen(false);
                 }}
-                className="mx-6 my-4 bg-[#7f20df] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#6a1bc0] transition-colors text-center flex items-center justify-center gap-2"
+                className="max-md:hidden mx-6 my-4 bg-[#7f20df] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#6a1bc0] transition-colors text-center flex items-center justify-center gap-2"
               >
                 <LogIn className="h-5 w-5" />
                 Connexion
@@ -178,16 +178,12 @@ export function TopNav() {
               ))}
               {user ? (
                 <>
-                  <div>
-                    <p>Welcome, {user?.name || "User"}!</p>
-                    <p>Email: {user?.email}</p>
-                  </div>
                   <button
                     onClick={() => {
                       signOut();
                       setMenuOpen(false);
                     }}
-                    className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
+                    className="flex gap-4 w-full bg-white text-red-600 font-medium rounded-md ml-2 px-4 py-2 hover:bg-gray-200"
                   >
                     <LogOut className="h-5 w-5" />
 

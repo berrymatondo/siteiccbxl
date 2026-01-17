@@ -65,6 +65,14 @@ export function AccueilSeries() {
       backgroundImage: "/images/spiritual-growth.jpg",
       link: "/about",
     },
+    {
+      id: 6,
+      title: "Témoignangesttt",
+      episodes: "5 épisodes",
+      icon: Sprout,
+      backgroundImage: "/images/spiritual-growth.jpg",
+      link: "/about",
+    },
   ];
 
   const [series, setSeries] = useState(defaultSeries);
@@ -177,7 +185,7 @@ export function AccueilSeries() {
           return (
             <div
               key={item.id}
-              className="flex flex-col min-w-[160px] w-[160px] gap-2"
+              className="flex flex-col min-w-[175px] w-[175px] gap-6"
             >
               <a
                 href={item.link}
