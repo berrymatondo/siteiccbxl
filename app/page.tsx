@@ -17,9 +17,9 @@ export default function HomePage() {
       <TopNav />
       <HeroSection />
       <main className="max-w-5xl mx-auto pb-24">
-        <div className="md:fle md:flex-col items-center justify-center  rounded-lg md:mx-4 border">
-          <div className="md:w-full md:flex md:justify-center  bg-white relative">
-            <div className="md:w-1/2">
+        <div className="md:fle md:flex-col items-center justify-center  rounded-lg md:mx-4 ">
+          <div className="md:w-full md:flex md:justify-center  bg-white relative border rounded-xl">
+            <div className="">
               <YoutubeHeroCard />
             </div>
           </div>

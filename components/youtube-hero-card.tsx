@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useSession } from "@/lib/auth-client";
 
 interface VideoInfo {
   url: string;
@@ -33,6 +34,11 @@ export function YoutubeHeroCard() {
   const [editUrl, setEditUrl] = useState("");
   const [editSpeaker, setEditSpeaker] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data: session } = useSession();
+  const user = session?.user;
+  //const { user } = session;
+  //console.log("user", session?.user);
 
   useEffect(() => {
     const loadVideo = async () => {
@@ -144,10 +150,10 @@ export function YoutubeHeroCard() {
 
   return (
     <>
-      <div className="px-2 md:px-4 mb-8 max-md:mt-4 ">
+      <div className="px-2 md:px-4 mb-8 max-md:mt-4  md:mt-4">
         <div className="flex items-center justify-between mb-3 ">
           <div className="text-center mb-8 w-full">
-            <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="flex items-center justify-center gap-4">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#7f20df]"></div>
               <h2 className="text-2xl md:text-3xl font-bold text-[#141117] dark:text-white uppercase tracking-tight">
                 Dernier Message
@@ -155,15 +161,17 @@ export function YoutubeHeroCard() {
               <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#7f20df]"></div>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleEdit}
-            className="h-8 px-2 absolute right-0"
-          >
-            <Edit2 className="w-4 h-4" />
-            Éditer
-          </Button>
+          {user && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleEdit}
+              className="h-8 px-2 absolute right-0"
+            >
+              <Edit2 className="w-4 h-4" />
+              Éditer
+            </Button>
+          )}
         </div>
 
         <a

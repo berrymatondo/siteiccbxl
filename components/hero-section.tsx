@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -25,6 +26,9 @@ export function HeroSection() {
     { image: "/images/f1.jpg", alt: "Congregation en adoration" },
     { image: "/images/f5f.jpg", alt: "Équipe média en action" },
   ]);
+
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     const loadImages = async () => {
@@ -134,16 +138,18 @@ export function HeroSection() {
             />
           ))}
 
-          <button
-            onClick={() => {
-              setEditImages(slides.map((s) => s.image));
-              setIsEditOpen(true);
-            }}
-            className="absolute top-4 right-4 z-20 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-lg shadow-lg transition-all"
-            aria-label="Éditer les images du slider"
-          >
-            <Pencil className="w-4 h-4" />
-          </button>
+          {user && (
+            <button
+              onClick={() => {
+                setEditImages(slides.map((s) => s.image));
+                setIsEditOpen(true);
+              }}
+              className="absolute top-4 right-4 z-20 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-lg shadow-lg transition-all"
+              aria-label="Éditer les images du slider"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
 
           <div className="relative flex flex-col justify-end min-h-160">
             <div className="p-6">

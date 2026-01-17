@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 
 export function LeadershipTeam() {
   const [expandedYvan, setExpandedYvan] = useState(false);
@@ -24,6 +25,9 @@ export function LeadershipTeam() {
   const [tempChristianImage, setTempChristianImage] = useState<string | null>(
     null
   );
+
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     const loadImages = async () => {
@@ -173,13 +177,15 @@ export function LeadershipTeam() {
         </div>
       </div>
 
-      <button
-        onClick={() => setIsEditOpen(true)}
-        className="absolute top-3 right-4 z-20 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
-        title="Modifier les images"
-      >
-        <Edit className="h-4 w-4 text-gray-700 dark:text-gray-300" />
-      </button>
+      {user && (
+        <button
+          onClick={() => setIsEditOpen(true)}
+          className="absolute top-3 right-4 z-20 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
+          title="Modifier les images"
+        >
+          <Edit className="h-4 w-4 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
 
       {/* Pasteur Yvan & Mode Castanou */}
       <div className="mb-12 bg-white dark:bg-zinc-900 rounded-2xl px-2 md:p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">

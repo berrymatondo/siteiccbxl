@@ -13,12 +13,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useSession } from "@/lib/auth-client";
 
 export function AccueilSeries() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editImages, setEditImages] = useState<string[]>([]);
   const [editTitles, setEditTitles] = useState<string[]>([]);
   const [editLinks, setEditLinks] = useState<string[]>([]);
+
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const defaultSeries = [
     {
@@ -147,14 +151,16 @@ export function AccueilSeries() {
   };
 
   return (
-    <section className="mt-8 relative ">
-      <button
-        onClick={handleEditClick}
-        className="absolute top-3 right-4 z-20 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
-        title="Modifier les cartes"
-      >
-        <Edit className="h-4 w-4 text-gray-700 dark:text-gray-300" />
-      </button>
+    <section className="mt-8 relative border rounded-xl">
+      {user && (
+        <button
+          onClick={handleEditClick}
+          className="absolute top-3 right-4 z-20 p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
+          title="Modifier les cartes"
+        >
+          <Edit className="h-4 w-4 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
 
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-6">
