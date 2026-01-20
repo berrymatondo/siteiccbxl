@@ -12,6 +12,7 @@ import {
   ChevronDown,
   LogIn,
   LogOut,
+  Phone,
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
@@ -26,7 +27,7 @@ export function TopNav() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  console.log("user", user);
+  //console.log("user", user);
 
   const menuItems = [
     { icon: Home, label: "Accueil", href: "/" },
@@ -34,6 +35,7 @@ export function TopNav() {
     { icon: Users, label: "Ministères", href: "/ministries" },
     { icon: LibraryBig, label: "Enseignements", href: "/teachings" },
     { icon: Calendar, label: "Activités", href: "/events" },
+    { icon: Phone, label: "Call Center", href: "/callcenter" },
     { icon: Mail, label: "Contact", href: "/contact" },
   ];
 
@@ -67,7 +69,7 @@ export function TopNav() {
             >
               Enseignements
             </Link>
-            <div className="relative">
+            <div className="relative ">
               <button
                 onMouseEnter={() => setGetInvolvedOpen(true)}
                 onMouseLeave={() => setGetInvolvedOpen(false)}
@@ -97,6 +99,12 @@ export function TopNav() {
                 </div>
               )}
             </div>
+            <Link
+              href="/callcenter"
+              className="text-white hover:text-gray-300 transition-colors text-sm font-medium"
+            >
+              Call Center
+            </Link>
             <Link
               href="/contact"
               className="text-white hover:text-gray-300 transition-colors text-sm font-medium"

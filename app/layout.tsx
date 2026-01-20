@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { TopNav } from "@/components/top-nav";
+import { MainFooter } from "@/components/main-footer";
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -46,6 +48,7 @@ export default function RootLayout({
         cz-shortcut-listen="true"
       >
         {children}
+        <MainFooter />
       </body>
     </html>
   );
