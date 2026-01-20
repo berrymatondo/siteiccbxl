@@ -77,6 +77,43 @@ export default function HomeAltActionCards() {
           </Link>
         </div>
       </div>
+
+      {/* Location studio */}
+      <div className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto flex flex-col justify-end p-6">
+        {/* Image */}
+        <Image
+          src="st2.JPG"
+          alt="Magazine ICC Mon Eglise"
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+        />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+        {/* Content */}
+        <div className="relative z-10 space-y-3">
+          <div className="inline-block px-3 py-1 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
+            Studio
+          </div>
+          <h3 className="text-white text-2xl font-bold">
+            Location du Studio d'Enregistrement
+          </h3>
+          <p className="text-white/80 text-sm leading-snug">
+            Réservez le studio pour vos enregistrements audio et vidéo.
+          </p>
+
+          <Link
+            href="https://stuido.impactcentrechretien.eu"
+            className="flex gap-2"
+          >
+            <span className="flex-1 py-3 bg-teal-400 text-center text-white font-bold rounded-lg text-sm shadow-lg hover:bg-[#135bec]/90 transition-colors">
+              Réserver le studio
+            </span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
