@@ -8,7 +8,7 @@ export default function HomeAltActionCards() {
     <div className="px-4 pt-8 pb-12 space-y-6 max-w-4xl mx-auto">
       {/* Écoute Pastorale */}
       <div
-        className="relative overflow-hidden rounded-2xl aspect-[16/9] flex flex-col justify-end p-6"
+        className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto flex flex-col justify-end p-6"
         style={{
           backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url("https://images.unsplash.com/photo-1573497161161-c3e73707e25c?w=800&h=450&fit=crop")`,
         }}
@@ -30,7 +30,7 @@ export default function HomeAltActionCards() {
 
       {/* Magazine hebdomadaire */}
       <div
-        className="relative overflow-hidden rounded-2xl aspect-[16/9] flex flex-col justify-end p-6"
+        className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto  flex flex-col justify-end p-6"
         style={{
           backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url("https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&h=450&fit=crop")`,
         }}
