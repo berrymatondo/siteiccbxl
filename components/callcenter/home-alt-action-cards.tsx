@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Download } from "lucide-react";
 import Link from "next/link";
 
@@ -7,12 +8,21 @@ export default function HomeAltActionCards() {
   return (
     <div className="px-4 pt-8 pb-12 space-y-6 max-w-4xl mx-auto">
       {/* Écoute Pastorale */}
-      <div
-        className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto flex flex-col justify-end p-6"
-        style={{
-          backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url("https://images.unsplash.com/photo-1573497161161-c3e73707e25c?w=800&h=450&fit=crop")`,
-        }}
-      >
+      <div className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto flex flex-col justify-end p-6">
+        {/* Image */}
+        <Image
+          src="/ssssv.jpg"
+          alt="Soins pastoraux"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+        />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+        {/* Content */}
         <div className="relative z-10 space-y-3">
           <div className="inline-block px-3 py-1 bg-[#135bec] text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
             Accompagnement
@@ -29,39 +39,41 @@ export default function HomeAltActionCards() {
       </div>
 
       {/* Magazine hebdomadaire */}
-      <div
-        className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto  flex flex-col justify-end p-6"
-        style={{
-          backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url("https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&h=450&fit=crop")`,
-        }}
-      >
+      <div className="relative overflow-hidden rounded-2xl aspect-[16/9] max-md:aspect-auto flex flex-col justify-end p-6">
+        {/* Image */}
+        <Image
+          src="hebdo.jpg"
+          alt="Magazine ICC Mon Eglise"
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+        />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+        {/* Content */}
         <div className="relative z-10 space-y-3">
           <div className="inline-block px-3 py-1 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
-            Nouveau
+            Hebdomadaire
           </div>
           <h3 className="text-white text-2xl font-bold">
-            Magazine de la semaine
+            Magazine ICC Mon Église
           </h3>
           <p className="text-white/80 text-sm leading-snug">
-            Édition du 24 Mai - Retrouvez les dernières nouvelles de la
-            communauté.
+            Retrouvez les dernières nouvelles de la famille ICC Bruxelles.
           </p>
-          <Link
-            href="https://qrco.de/ICCMonEglise"
-            className="flex gap-2 hover:cursor-pointer"
-          >
-            <p className="hover:cursor-pointer flex-1 py-3 bg-[#135bec] text-white font-bold rounded-lg text-sm shadow-lg hover:bg-[#135bec]/90 transition-colors">
-              {/*               <Link
-                href="https://qrco.de/ICCMonEglise"
-                className="text-white/80 text-sm leading-snug"
-              > */}
+
+          <Link href="https://qrco.de/ICCMonEglise" className="flex gap-2">
+            <span className="flex-1 py-3 bg-[#135bec] text-center text-white font-bold rounded-lg text-sm shadow-lg hover:bg-[#135bec]/90 transition-colors">
               Lire en ligne
-              {/*               </Link>
-               */}{" "}
-            </p>
+            </span>
+
+            {/*
             <button className="px-4 py-3 bg-white/20 backdrop-blur-md text-white font-bold rounded-lg text-sm border border-white/30 hover:bg-white/30 transition-colors">
               <Download className="h-5 w-5" />
             </button>
+            */}
           </Link>
         </div>
       </div>
