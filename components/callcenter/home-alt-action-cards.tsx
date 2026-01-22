@@ -105,7 +105,8 @@ export default function HomeAltActionCards() {
           </p>
 
           <Link
-            href="https://stuido.impactcentrechretien.eu"
+            href="https://icistudiolocations.wixsite.com/icistudio"
+            target="_blank"
             className="flex gap-2"
           >
             <span className="flex-1 py-3 bg-teal-400 text-center text-white font-bold rounded-lg text-sm shadow-lg hover:bg-[#135bec]/90 transition-colors">

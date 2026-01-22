@@ -14,20 +14,19 @@ import {
   LogOut,
   Phone,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
 
 export function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [getInvolvedOpen, setGetInvolvedOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const { data: session } = useSession();
   const user = session?.user;
-
-  //console.log("user", user);
 
   const menuItems = [
     { icon: Home, label: "Accueil", href: "/" },
@@ -35,13 +34,52 @@ export function TopNav() {
     { icon: Users, label: "Ministères", href: "/ministries" },
     { icon: LibraryBig, label: "Enseignements", href: "/teachings" },
     { icon: Calendar, label: "Activités", href: "/events" },
-    { icon: Phone, label: "Call Center", href: "/callcenter" },
+    { icon: Phone, label: "Infos Utiles", href: "/callcenter" },
     { icon: Mail, label: "Contact", href: "/contact" },
   ];
 
   const handleLoginClick = () => {
     router.push("/auth/login");
   };
+
+  // Active si on est exactement sur la route,
+  // ou sur une sous-page (ex: /teachings/123 => /teachings)
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
+  // Desktop links (style)
+  const desktopLinkClass = (href: string) =>
+    [
+      "transition-colors text-sm font-medium",
+      isActive(href)
+        ? "text-white border-b-2 border-[#7f20df] pb-1"
+        : "text-white hover:text-gray-300",
+    ].join(" ");
+
+  // Dropdown links (style)
+  const dropdownLinkClass = (href: string) =>
+    [
+      "block px-4 py-2 transition-colors text-sm",
+      isActive(href)
+        ? "bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white font-semibold"
+        : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800",
+    ].join(" ");
+
+  // Mobile links (style)
+  const mobileLinkClass = (href: string) =>
+    [
+      "flex items-center gap-4 px-6 py-4 border-b border-gray-100 dark:border-gray-800 last:border-b-0 transition-colors",
+      isActive(href)
+        ? "bg-gray-50 dark:bg-zinc-900"
+        : "hover:bg-gray-50 dark:hover:bg-zinc-900",
+    ].join(" ");
+
+  // Optionnel : surbrillance du bouton "S'impliquer" si on est sur /ministries ou /events
+  const getInvolvedActive = useMemo(() => {
+    return isActive("/ministries") || isActive("/events");
+  }, [pathname]);
 
   return (
     <>
@@ -57,27 +95,29 @@ export function TopNav() {
 
           {/* Desktop Navigation - Hidden on mobile */}
           <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="/about"
-              className="text-white hover:text-gray-300 transition-colors text-sm font-medium"
-            >
+            <Link href="/about" className={desktopLinkClass("/about")}>
               À Propos
             </Link>
-            <Link
-              href="/teachings"
-              className="text-white hover:text-gray-300 transition-colors text-sm font-medium"
-            >
+
+            <Link href="/teachings" className={desktopLinkClass("/teachings")}>
               Enseignements
             </Link>
-            <div className="relative ">
+
+            <div className="relative">
               <button
                 onMouseEnter={() => setGetInvolvedOpen(true)}
                 onMouseLeave={() => setGetInvolvedOpen(false)}
-                className="text-white hover:text-gray-300 transition-colors text-sm font-medium flex items-center gap-1"
+                className={[
+                  "transition-colors text-sm font-medium flex items-center gap-1",
+                  getInvolvedActive
+                    ? "text-white border-b-2 border-[#7f20df] pb-1"
+                    : "text-white hover:text-gray-300",
+                ].join(" ")}
               >
-                S'impliquer
+                S&apos;impliquer
                 <ChevronDown className="h-4 w-4" />
               </button>
+
               {getInvolvedOpen && (
                 <div
                   onMouseEnter={() => setGetInvolvedOpen(true)}
@@ -86,52 +126,45 @@ export function TopNav() {
                 >
                   <Link
                     href="/ministries"
-                    className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-sm"
+                    className={dropdownLinkClass("/ministries")}
                   >
                     Ministères
                   </Link>
-                  <Link
-                    href="/events"
-                    className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-sm"
-                  >
+                  <Link href="/events" className={dropdownLinkClass("/events")}>
                     Activités
                   </Link>
                 </div>
               )}
             </div>
+
             <Link
               href="/callcenter"
-              className="text-white hover:text-gray-300 transition-colors text-sm font-medium"
+              className={desktopLinkClass("/callcenter")}
             >
-              Call Center
+              Infos Utiles
             </Link>
-            <Link
-              href="/contact"
-              className="text-white hover:text-gray-300 transition-colors text-sm font-medium"
-            >
+
+            <Link href="/contact" className={desktopLinkClass("/contact")}>
               Contact
             </Link>
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center gap-4 ">
+          <div className="flex items-center gap-4">
             {user ? (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="text-white">{user?.name || "User"}</div>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      setMenuOpen(false);
-                    }}
-                    className=" max-md:hidden flex items-center w-full bg-white text-red-400 font-medium rounded-md px-4 py-2 hover:bg-gray-200"
-                  >
-                    <LogOut className="h-5 w-5" />
-
-                    {"Déconnexion"}
-                  </button>
-                </div>
-              </>
+              <div className="flex items-center gap-4">
+                <div className="text-white">{user?.name || "User"}</div>
+                <button
+                  onClick={() => {
+                    signOut();
+                    setMenuOpen(false);
+                  }}
+                  className="max-md:hidden flex items-center w-full bg-white text-red-400 font-medium rounded-md px-4 py-2 hover:bg-gray-200"
+                >
+                  <LogOut className="h-5 w-5" />
+                  {"Déconnexion"}
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => {
@@ -176,28 +209,38 @@ export function TopNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 dark:hover:bg-zinc-900 border-b border-gray-100 dark:border-gray-800 last:border-b-0 transition-colors"
+                  className={mobileLinkClass(item.href)}
                 >
-                  <item.icon className="h-5 w-5 text-[#7f20df]" />
-                  <span className="text-[#141117] dark:text-white font-medium">
+                  <item.icon
+                    className={[
+                      "h-5 w-5",
+                      isActive(item.href) ? "text-white" : "text-[#7f20df]",
+                    ].join(" ")}
+                  />
+                  <span
+                    className={[
+                      "font-medium",
+                      isActive(item.href)
+                        ? "text-white bg-[#7f20df] px-2 py-1 rounded-md"
+                        : "text-[#141117] dark:text-white",
+                    ].join(" ")}
+                  >
                     {item.label}
                   </span>
                 </Link>
               ))}
-              {user ? (
-                <>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      setMenuOpen(false);
-                    }}
-                    className="flex gap-4 w-full bg-white text-red-600 font-medium rounded-md ml-2 px-4 py-2 hover:bg-gray-200"
-                  >
-                    <LogOut className="h-5 w-5" />
 
-                    {"Déconnexion"}
-                  </button>
-                </>
+              {user ? (
+                <button
+                  onClick={() => {
+                    signOut();
+                    setMenuOpen(false);
+                  }}
+                  className="flex gap-4 w-full bg-white text-red-600 font-medium rounded-md ml-2 px-4 py-2 hover:bg-gray-200"
+                >
+                  <LogOut className="h-5 w-5" />
+                  {"Déconnexion"}
+                </button>
               ) : (
                 <button
                   onClick={() => {
